@@ -6,7 +6,7 @@
 <div th:replace="~{blog/header :: header}"></div>
 
 <body>
-<div th:replace="~{blog/header :: navbar}"></div>
+<div th:replace="${role} == 'ROLE_CLIENT' ? ~{blog/header :: navbar} : ~{admin/header :: navbar}"></div>
 
 <div class="container">
     <div class="row">

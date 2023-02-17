@@ -37,7 +37,7 @@ public class PostController {
             posts = postService.findPostsByUser(); // else only see own posts
         }
         model.addAttribute("posts", posts);
-        return "/admin/posts";
+        return "admin/posts";
     }
 
     // handler method to handle list comments request
@@ -51,7 +51,7 @@ public class PostController {
             comments = commentService.findCommentsByPost(); // else only see comments on own posts
         }
         model.addAttribute("comments", comments);
-        return "/admin/comments";
+        return "admin/comments";
     }
 
     // handler method to handle delete comment request
@@ -69,7 +69,7 @@ public class PostController {
         // pass empty postDto object to the model where it will be filled from a form, then passed back as DTO to be converted to post to be put in repository
         PostDto postDto = new PostDto();
         model.addAttribute("post", postDto);
-        return "/admin/create_post";
+        return "admin/create_post";
     }
 
     // handler method to handle form submit request
@@ -78,7 +78,7 @@ public class PostController {
         if(result.hasErrors()) {
             // if there's an error, stay on the same page and use the same object for post creation
             model.addAttribute("post", postDto);
-            return "/admin/create_post";
+            return "admin/create_post";
         }
         postDto.setUrl(getUrl(postDto.getTitle())); // updates url (remember created on and updated are already set)
         postService.createPost(postDto);
@@ -93,7 +93,7 @@ public class PostController {
         // add it to the model for access in the view
         model.addAttribute("post", postDto);
         // return the page
-        return "/admin/edit_post";
+        return "admin/edit_post";
     }
 
     // handler method to handle edit post form submit request
@@ -103,7 +103,7 @@ public class PostController {
         if(result.hasErrors()) {
             // if there's an error, stay on the same page and use the same object for post editing
             model.addAttribute("post", postDto);
-            return "/admin/edit_post";
+            return "admin/edit_post";
         }
         postService.updatePost(postDto);
         return "redirect:/admin/posts";
@@ -122,7 +122,7 @@ public class PostController {
         PostDto postDto = postService.findPostByUrl(postUrl);
         System.out.println(postDto);
         model.addAttribute("post", postDto);
-        return "/admin/view_post";
+        return "admin/view_post";
     }
 
     // handler method to handle search blog posts request

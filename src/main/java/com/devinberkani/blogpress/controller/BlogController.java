@@ -44,6 +44,15 @@ public class BlogController {
     // handler method to handle view post request
     @GetMapping("/post/{postUrl}")
     public String showPost(@PathVariable("postUrl") String postUrl, Model model) {
+        String role;
+        // role may be null if current site visitor is client, check for this situation
+        try {
+            role = SecurityUtils.getRole();
+        } catch (NullPointerException nullPointerException) {
+            role = "ROLE_CLIENT"; // if role is null, make them a client
+        }
+        // if not null, role will either be guest or admin
+        model.addAttribute("role", role);
         PostDto post = postService.findPostByUrl(postUrl);
         CommentDto commentDto = new CommentDto(); // empty comment object for new comments
         model.addAttribute("post", post);
