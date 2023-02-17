@@ -8,19 +8,37 @@
 <div class="container">
     <div class="row">
         <div class="col-md-9">
+            <div th:each="adminPost : ${adminPosts}">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>
+                            <span class="bg-warning rounded py-1 px-1" style="font-size: 16px">Admin</span>
+                            <strong><a class="text-dark" style="text-decoration: none" th:href="@{/post/{postUrl}(postUrl=${adminPost.url})}" th:text="${adminPost.title}"></a></strong>
+                        </h2>
+                        <div>
+                            <span class="text-secondary" th:text="${#temporals.format(adminPost.createdOn, 'MMMM dd, yyyy')}"></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span th:utext="${adminPost.shortDescription}"> </span>
+                        <a class="text-primary" th:href="@{/post/{postUrl}(postUrl=${adminPost.url})}">Read more</a>
+                    </div>
+                </div>
+                <br/>
+            </div>
             <div th:each="post : ${postsResponse}">
                 <div class="card">
                     <div class="card-header">
                         <h3>
-                            <a style="text-decoration: none" th:href="@{/post/{postUrl}(postUrl=${post.url})}" th:text="${post.title}"></a>
+                            <a class="text-dark" style="text-decoration: none" th:href="@{/post/{postUrl}(postUrl=${post.url})}" th:text="${post.title}"></a>
                         </h3>
                         <div>
-                            <strong th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"></strong>
+                            <span class="text-secondary" th:text="${#temporals.format(post.createdOn, 'MMMM dd, yyyy')}"></span>
                         </div>
                     </div>
                     <div class="card-body">
                         <span th:utext="${post.shortDescription}"> </span>
-                        <a th:href="@{/post/{postUrl}(postUrl=${post.url})}">Read more</a>
+                        <a class="text-primary" th:href="@{/post/{postUrl}(postUrl=${post.url})}">Read more</a>
                     </div>
                 </div>
                     <br/>

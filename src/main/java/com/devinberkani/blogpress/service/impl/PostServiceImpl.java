@@ -47,6 +47,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<PostDto> getAdminPosts() {
+        // get a list of all the posts in the repository
+        List<Post> posts = postRepository.findAll();
+        // return the list of all admin posts as DTOs - admin id MUST be 1
+        return posts.stream()
+                .filter(post -> post.getCreatedBy().getId() == 2)
+                .map(PostMapper::mapToPostDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostDto> getNonAdminPosts() {
+        // get a list of all the posts in the repository
+        List<Post> posts = postRepository.findAll();
+        // return the list of non-admin posts as DTOs
+        return posts.stream()
+                .filter(post -> post.getCreatedBy().getId() != 2)
+                .map(PostMapper::mapToPostDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void createPost(PostDto postDto) {
         // save the created postDto as a post object in the post repository
         String email = SecurityUtils.getCurrentUser().getUsername(); // gets current logged in user

@@ -33,8 +33,10 @@ public class BlogController {
             role = "ROLE_CLIENT"; // if role is null, make them a client
         }
         // if not null, role will either be guest or admin
-        List<PostDto> postsResponse = postService.findAllPosts();
         model.addAttribute("role", role);
+        List<PostDto> adminPosts = postService.getAdminPosts();
+        model.addAttribute("adminPosts", adminPosts);
+        List<PostDto> postsResponse = postService.getNonAdminPosts();
         model.addAttribute("postsResponse", postsResponse);
         return "blog/view_posts";
     }
@@ -60,8 +62,16 @@ public class BlogController {
         } catch (NullPointerException nullPointerException) {
             role = "ROLE_CLIENT"; // if role is null, make them a client
         }
+        // if not null, role will either be guest or admin
         model.addAttribute("role", role);
-        List<PostDto> postsResponse = postService.searchPosts(query);
+        List<PostDto> postsResponse;
+        if (query.equals("")) {
+            List<PostDto> adminPosts = postService.getAdminPosts();
+            model.addAttribute("adminPosts", adminPosts);
+            postsResponse = postService.getNonAdminPosts();
+        } else {
+            postsResponse = postService.searchPosts(query);
+        }
         model.addAttribute("postsResponse", postsResponse);
         return "blog/view_posts";
     }
