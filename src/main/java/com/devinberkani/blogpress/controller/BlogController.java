@@ -3,6 +3,7 @@ package com.devinberkani.blogpress.controller;
 import com.devinberkani.blogpress.dto.CommentDto;
 import com.devinberkani.blogpress.dto.PostDto;
 import com.devinberkani.blogpress.service.PostService;
+import com.devinberkani.blogpress.util.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ public class BlogController {
 
     private PostService postService;
 
+
     public BlogController(PostService postService) {
         this.postService = postService;
     }
@@ -23,7 +25,16 @@ public class BlogController {
     // handler method to handle http://localhost:8080/
     @GetMapping("/")
     public String viewBlogPosts(Model model) {
+        String role;
+        // role may be null if current site visitor is client, check for this situation
+        try {
+            role = SecurityUtils.getRole();
+        } catch (NullPointerException nullPointerException) {
+            role = "ROLE_CLIENT"; // if role is null, make them a client
+        }
+        // if not null, role will either be guest or admin
         List<PostDto> postsResponse = postService.findAllPosts();
+        model.addAttribute("role", role);
         model.addAttribute("postsResponse", postsResponse);
         return "blog/view_posts";
     }
@@ -42,6 +53,14 @@ public class BlogController {
     // localhost:8080/admin/page/search?query=java
     @GetMapping("/page/search")
     public String searchPosts(@RequestParam(value = "query") String query, Model model) {
+        String role;
+        // role may be null if current site visitor is client, check for this situation
+        try {
+            role = SecurityUtils.getRole();
+        } catch (NullPointerException nullPointerException) {
+            role = "ROLE_CLIENT"; // if role is null, make them a client
+        }
+        model.addAttribute("role", role);
         List<PostDto> postsResponse = postService.searchPosts(query);
         model.addAttribute("postsResponse", postsResponse);
         return "blog/view_posts";

@@ -9,28 +9,31 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous">
   <meta charset="UTF-8">
-  <title>BlogPress</title>
+  <title>BlogPress | Share Your Voice</title>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
-    <div class="container-fluid">
-      <a class="navbar-brand" th:href="@{/}">BlogPress</a>
+    <div class="container-fluid" style="padding: 0 75px 0 75px">
+      <a class="navbar-brand" th:href="@{/}"><img src="/images/blogpress-logo-light.png" alt="" width="30" height="30" class="d-inline-block align-text-top"> BlogPress</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" th:href="@{/admin/posts}">Posts</a>
+            <a class="nav-link active" aria-current="page" th:href="@{/}">Home</a>
           </li>
           <li class="nav-item">
-          <a class="nav-link active" aria-current="page" th:href="@{/admin/posts/newpost}">New Post</a>
+            <a class="nav-link active" aria-current="page" th:href="@{/admin/posts}">My Posts</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" th:href="@{/admin/posts/comments}">Comments</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
+          <li class="nav-item mx-lg-2 mx-sm-0 px-1 bg-warning rounded">
+            <a class="nav-link active text-dark" aria-current="page" th:href="@{/admin/posts/newpost}">New Post</a>
+          </li>
+          <li class="nav-item mx-lg-1 mx-sm-0 my-2 my-lg-0 px-1 rounded" style="background-color: #D3D3D3">
+            <a class="nav-link active text-dark" aria-current="page" th:href="@{/logout}">Logout</a>
           </li>
         </ul>
       </div>

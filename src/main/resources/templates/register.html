@@ -3,36 +3,22 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <head>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
     <link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>BlogPress</title>
+    <title>BlogPress | Share Your Voice</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">BlogPress</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/}">All Posts</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<br/><br/>
+<div th:replace="~{blog/header :: navbar}"></div>
 <div class="container">
     <div class="row col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header">
-                <h2 class="text-center">Registration</h2>
+                <h2 class="text-center">Sign Up</h2>
             </div>
             <!-- success flag param is coming from handler method -->
             <div th:if="${param.success}">
@@ -102,13 +88,10 @@
     </div>
 </div>
 <footer class="footer-copyright text-center bg-dark py-3"
-        style="position: fixed; height: 80px; width: 100%; bottom: 0; color: white"
+        style="position: fixed; height: 60px; width: 100%; bottom: 0; color: white"
         th:fragment="footer">
     <div>
-        <strong>
-            Copyright &copy; 2023 <a href="https://www.devinberkani.com">Devin Berkani</a>
-            All rights reserved.
-        </strong>
+            &copy; <span th:text="${#dates.year(#dates.createNow())}"></span> <a style="color: white; text-decoration: none" href="https://www.devinberkani.com">Devin Berkani</a>. All rights reserved.
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </footer>

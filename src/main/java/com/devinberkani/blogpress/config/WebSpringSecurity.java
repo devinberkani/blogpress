@@ -64,13 +64,14 @@ public class WebSpringSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers(new AntPathRequestMatcher("/404")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                        authorize.requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/register/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/admin/**"))
                                 .hasAnyRole("ADMIN","GUEST")
                                 .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/post/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/page/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/**/comments")).permitAll()
                                 .anyRequest().authenticated()
                 )

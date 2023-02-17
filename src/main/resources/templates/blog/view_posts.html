@@ -4,7 +4,7 @@
 >
 <div th:replace="~{blog/header :: header}"></div>
 <body>
-<div th:replace="~{blog/header :: navbar}"></div>
+<div th:replace="${role} == 'ROLE_CLIENT' ? ~{blog/header :: navbar} : ~{admin/header :: navbar}"></div>
 <div class="container">
     <div class="row">
         <div class="col-md-9">
@@ -12,7 +12,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>
-                            <a th:href="@{/post/{postUrl}(postUrl=${post.url})}" th:text="${post.title}"></a>
+                            <a style="text-decoration: none" th:href="@{/post/{postUrl}(postUrl=${post.url})}" th:text="${post.title}"></a>
                         </h3>
                         <div>
                             <strong th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"></strong>
