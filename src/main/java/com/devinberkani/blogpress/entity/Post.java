@@ -29,6 +29,7 @@ public class Post {
     @Lob
     @Column(nullable = false, columnDefinition = "longtext")
     private String content;
+    @Column(nullable = false, columnDefinition = "longtext")
     private String shortDescription;
     @CreationTimestamp // automatically populates value of field with created timestamp
     private LocalDateTime createdOn;
