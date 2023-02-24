@@ -112,4 +112,15 @@ public class PostServiceImpl implements PostService {
                 .map(PostMapper::mapToPostDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<PostDto> searchPostsByUser(String query) {
+        String email = SecurityUtils.getCurrentUser().getUsername(); // gets current logged in user
+        User createdBy = userRepository.findByEmail(email); // gets user
+        Long userId = createdBy.getId(); // gets user id
+        List<Post> posts = postRepository.searchPostsByUserId(query, userId); // gets list of user posts
+        return posts.stream()
+                .map(PostMapper::mapToPostDto)
+                .collect(Collectors.toList());
+    }
 }

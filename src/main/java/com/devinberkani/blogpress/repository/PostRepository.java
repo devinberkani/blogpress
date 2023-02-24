@@ -3,6 +3,7 @@ package com.devinberkani.blogpress.repository;
 import com.devinberkani.blogpress.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> { // <Entity T
     Optional<Post> findByUrl(String url);
 
     // this query checks title and short description for substrings of %query% where % is a wildcard
+    // searches ALL posts
     @Query("SELECT p from Post p WHERE " +
             " p.title LIKE CONCAT('%', :query, '%') OR " +
             " p.shortDescription LIKE CONCAT('%', :query, '%')")
@@ -20,5 +22,12 @@ public interface PostRepository extends JpaRepository<Post, Long> { // <Entity T
 
     @Query(value = "SELECT * FROM posts p WHERE p.created_by =:userId", nativeQuery = true)
     List<Post> findPostsByUser(Long userId);
+
+    // searches posts based on user id
+    @Query("SELECT p FROM Post p WHERE " +
+            " p.createdBy.id = :userId AND " +
+            " (p.title LIKE CONCAT('%', :query, '%') OR " +
+            " p.shortDescription LIKE CONCAT('%', :query, '%'))")
+    List<Post> searchPostsByUserId(String query, Long userId);
 
 }

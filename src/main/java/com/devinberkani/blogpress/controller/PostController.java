@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -36,6 +37,8 @@ public class PostController {
         } else {
             posts = postService.findPostsByUser(); // else only see own posts
         }
+        // make newest posts show up first by default
+        Collections.reverse(posts);
         model.addAttribute("posts", posts);
         return "admin/posts";
     }
@@ -50,6 +53,8 @@ public class PostController {
         } else {
             comments = commentService.findCommentsByPost(); // else only see comments on own posts
         }
+        // make newest comments show up first by default
+        Collections.reverse(comments);
         model.addAttribute("comments", comments);
         return "admin/comments";
     }
@@ -129,7 +134,15 @@ public class PostController {
     // localhost:8080/admin/posts/search?query=java
     @GetMapping("/admin/posts/search")
     public String searchPosts(@RequestParam(value="query") String query, Model model) { // @Request Param binds the value of the query request parameter to the query method parameter
-        List<PostDto> posts = postService.searchPosts(query);
+        String role = SecurityUtils.getRole();
+        List<PostDto> posts;
+        if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
+            posts = postService.searchPosts(query); // search all of the posts in the database
+        } else {
+            posts = postService.searchPostsByUser(query); // only search user posts
+        }
+        // make newest comments show up first by default
+        Collections.reverse(posts);
         model.addAttribute("posts", posts);
         return "admin/posts";
     }

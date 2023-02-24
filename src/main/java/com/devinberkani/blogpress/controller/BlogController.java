@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -37,6 +38,8 @@ public class BlogController {
         List<PostDto> adminPosts = postService.getAdminPosts();
         model.addAttribute("adminPosts", adminPosts);
         List<PostDto> postsResponse = postService.getNonAdminPosts();
+        // make newest posts show up first by default
+        Collections.reverse(postsResponse);
         model.addAttribute("postsResponse", postsResponse);
         return "blog/view_posts";
     }
@@ -81,6 +84,8 @@ public class BlogController {
         } else {
             postsResponse = postService.searchPosts(query);
         }
+        // make newest posts show up first by default
+        Collections.reverse(postsResponse);
         model.addAttribute("postsResponse", postsResponse);
         return "blog/view_posts";
     }
