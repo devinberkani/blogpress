@@ -57,7 +57,7 @@
             <!-- pagination -->
 
             <div th:if="${totalPages > 1}">
-                <div th:replace="${query == null || query == ''} ? ~{blog/main-pagination} : ~{blog/search-pagination}"></div>
+                <div th:replace="${query == null || query == ''} ? ~{blog/main-pagination :: main-pagination} : ~{blog/search-pagination :: search-pagination}"></div>
             </div>
 
         </div>

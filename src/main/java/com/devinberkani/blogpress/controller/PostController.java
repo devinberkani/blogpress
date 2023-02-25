@@ -42,6 +42,7 @@ public class PostController {
         } else {
             page = postService.searchUserPosts("", pageNo); // else only see own posts
         }
+        model.addAttribute("query", "");
         return getPage(pageNo, model, page);
     }
 
@@ -152,7 +153,7 @@ public class PostController {
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
             page = postService.searchAdminPosts(query, pageNo); // search all of the posts in the database
         } else {
-            page = postService.searchUserPosts(query, pageNo); // FIXME: only search user posts
+            page = postService.searchUserPosts(query, pageNo);
         }
         model.addAttribute("query", query);
         return getPage(pageNo, model, page);
