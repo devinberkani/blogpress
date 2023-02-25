@@ -11,6 +11,7 @@ public interface PostService {
     List<PostDto> findPostsByUser();
 
     List<PostDto> getAdminPosts();
+
     List<PostDto> getNonAdminPosts();
 
     void createPost(PostDto postDto);
@@ -23,11 +24,14 @@ public interface PostService {
 
     PostDto findPostByUrl(String postUrl);
 
-//    List<PostDto> searchPosts(String query);
+    //    List<PostDto> searchPosts(String query);
     Page<PostDto> searchAllPosts(String query, int pageNo);
+
     Page<PostDto> searchAdminPosts(String query, int pageNo);
 
     Page<PostDto> searchUserPosts(String query, int pageNo);
+
     String getRole();
+
     Page<PostDto> findAllPaginatedPosts(int pageNo, int pageSize);
 }

@@ -20,9 +20,9 @@ public interface PostRepository extends JpaRepository<Post, Long> { // <Entity T
     @Query(value = "SELECT p from Post p WHERE " +
             " p.title LIKE CONCAT('%', :query, '%') OR " +
             " p.shortDescription LIKE CONCAT('%', :query, '%')",
-    countQuery = "SELECT count(*) from Post p WHERE " +
-            " p.title LIKE CONCAT('%', :query, '%') OR " +
-            " p.shortDescription LIKE CONCAT('%', :query, '%')")
+            countQuery = "SELECT count(*) from Post p WHERE " +
+                    " p.title LIKE CONCAT('%', :query, '%') OR " +
+                    " p.shortDescription LIKE CONCAT('%', :query, '%')")
     Page<Post> searchPosts(String query, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts p WHERE p.created_by =:userId", nativeQuery = true)
@@ -34,9 +34,9 @@ public interface PostRepository extends JpaRepository<Post, Long> { // <Entity T
             " (p.title LIKE CONCAT('%', :query, '%') OR " +
             " p.shortDescription LIKE CONCAT('%', :query, '%'))",
             countQuery = "SELECT p FROM Post p WHERE " +
-            " p.createdBy.id = :userId AND " +
-            " (p.title LIKE CONCAT('%', :query, '%') OR " +
-            " p.shortDescription LIKE CONCAT('%', :query, '%'))")
+                    " p.createdBy.id = :userId AND " +
+                    " (p.title LIKE CONCAT('%', :query, '%') OR " +
+                    " p.shortDescription LIKE CONCAT('%', :query, '%'))")
     Page<Post> searchPostsByUserId(String query, Long userId, Pageable pageable);
 
 }

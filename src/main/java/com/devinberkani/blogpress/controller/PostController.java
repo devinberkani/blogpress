@@ -18,8 +18,8 @@ import java.util.List;
 @Controller
 public class PostController {
 
-    private PostService postService;
-    private CommentService commentService;
+    private final PostService postService;
+    private final CommentService commentService;
 
     public PostController(PostService postService, CommentService commentService) {
         this.postService = postService;
@@ -34,7 +34,7 @@ public class PostController {
     }
 
     @GetMapping("/admin/posts/page/{pageNo}")
-    public String viewPaginatedPosts(@PathVariable (value = "pageNo") int pageNo, Model model) {
+    public String viewPaginatedPosts(@PathVariable(value = "pageNo") int pageNo, Model model) {
         String role = SecurityUtils.getRole();
         Page<PostDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
@@ -89,7 +89,7 @@ public class PostController {
     // handler method to handle form submit request
     @PostMapping("/admin/posts")
     public String createPost(@Valid @ModelAttribute("post") PostDto postDto, BindingResult result, Model model) { //@ModelAttribute retrieves submitted form data - @Valid annotation validates fields for post creation - BindingResult allows you to display errors to the user
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             // if there's an error, stay on the same page and use the same object for post creation
             model.addAttribute("post", postDto);
             return "admin/create_post";
@@ -101,7 +101,7 @@ public class PostController {
 
     // handle edit post request
     @GetMapping("/admin/posts/{postId}/edit")
-    public String editPostForm(@PathVariable("postId") Long postId,Model model) { // @PathVariable annotation extracts the postId variable from the path for use in the method
+    public String editPostForm(@PathVariable("postId") Long postId, Model model) { // @PathVariable annotation extracts the postId variable from the path for use in the method
         // find specific post
         PostDto postDto = postService.findPostById(postId);
         // add it to the model for access in the view
@@ -114,7 +114,7 @@ public class PostController {
     @PostMapping("/admin/posts/{postId}")
     public String updatePost(@PathVariable("postId") Long postId, @Valid @ModelAttribute("post") PostDto postDto, BindingResult result, Model model) {
         postDto.setId(postId); // id has to be set in the beginning or it won't be able to match the post mapping url
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             // if there's an error, stay on the same page and use the same object for post editing
             model.addAttribute("post", postDto);
             return "admin/edit_post";
@@ -141,12 +141,12 @@ public class PostController {
     // handler method to handle search blog posts request
     // localhost:8080/admin/posts/search?query=java
     @GetMapping("/admin/posts/search")
-    public String searchPosts(@RequestParam(value="query") String query, @RequestParam(value = "page") int pageNo, Model model) { // @Request Param binds the value of the query request parameter to the query method parameter
+    public String searchPosts(@RequestParam(value = "query") String query, @RequestParam(value = "page") int pageNo, Model model) { // @Request Param binds the value of the query request parameter to the query method parameter
         return searchPaginatedPosts(query, pageNo, model);
     }
 
     @GetMapping("/admin/posts/search?query={query}&page={page}")
-    public String searchPaginatedPosts(@PathVariable(value = "query") String query, @PathVariable (value = "page") int pageNo, Model model) {
+    public String searchPaginatedPosts(@PathVariable(value = "query") String query, @PathVariable(value = "page") int pageNo, Model model) {
         String role = SecurityUtils.getRole();
         Page<PostDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN

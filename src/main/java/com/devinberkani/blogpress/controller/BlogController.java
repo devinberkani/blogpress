@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Controller
 public class BlogController {
 
-    private PostService postService;
+    private final PostService postService;
 
 
     public BlogController(PostService postService) {
@@ -30,7 +30,7 @@ public class BlogController {
     }
 
     @GetMapping("/page/{pageNo}")
-    public String viewPaginatedBlogPosts(@PathVariable (value = "pageNo") int pageNo, Model model) {
+    public String viewPaginatedBlogPosts(@PathVariable(value = "pageNo") int pageNo, Model model) {
         String role = postService.getRole();
         model.addAttribute("role", role);
         List<PostDto> adminPosts = postService.getAdminPosts();
@@ -78,30 +78,30 @@ public class BlogController {
 //        return "blog/view_posts";
 //    }
 
-        @GetMapping("/page/search")
-        public String searchPosts(@RequestParam(value = "query") String query, @RequestParam(value = "page") int pageNo, Model model) {
+    @GetMapping("/page/search")
+    public String searchPosts(@RequestParam(value = "query") String query, @RequestParam(value = "page") int pageNo, Model model) {
         return findPaginatedSearch(query, pageNo, model);
     }
 
-        @GetMapping("/page/search?query={query}&page={page}")
-        public String findPaginatedSearch(@PathVariable(value = "query") String query, @PathVariable (value = "page") int pageNo, Model model) {
-            String role = postService.getRole();
-            model.addAttribute("role", role);
-            Page<PostDto> page = postService.searchAllPosts(query, pageNo);
-            // filter out admin posts from pagination
-            List<PostDto> postsResponse;
-            if (query.equals("")) {
-                // if there is no query, return the paginated home page
-                return viewPaginatedBlogPosts(1, model);
-            } else {
-                postsResponse = page.getContent();
-            }
-            model.addAttribute("query", query);
-            model.addAttribute("currentPage", pageNo);
-            model.addAttribute("totalPages", page.getTotalPages());
-            model.addAttribute("totalItems", page.getTotalElements());
-            model.addAttribute("postsResponse", postsResponse);
-            return "blog/view_posts";
+    @GetMapping("/page/search?query={query}&page={page}")
+    public String findPaginatedSearch(@PathVariable(value = "query") String query, @PathVariable(value = "page") int pageNo, Model model) {
+        String role = postService.getRole();
+        model.addAttribute("role", role);
+        Page<PostDto> page = postService.searchAllPosts(query, pageNo);
+        // filter out admin posts from pagination
+        List<PostDto> postsResponse;
+        if (query.equals("")) {
+            // if there is no query, return the paginated home page
+            return viewPaginatedBlogPosts(1, model);
+        } else {
+            postsResponse = page.getContent();
         }
+        model.addAttribute("query", query);
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("postsResponse", postsResponse);
+        return "blog/view_posts";
+    }
 
 }

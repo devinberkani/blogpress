@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService {
 
-    private PostRepository postRepository;
-    private UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     // @Autowired annotation not needed because Spring automatically performs dependency injection when there is only one construction
     public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
@@ -108,7 +108,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostDto> searchAllPosts(String query, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Direction.DESC,"id"));
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Direction.DESC, "id"));
         return postRepository.searchPosts(query, pageable).map(PostMapper::mapToPostDto);
     }
 
@@ -141,7 +141,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostDto> findAllPaginatedPosts(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC,"id"));
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
         return postRepository.findAll(pageable).map(PostMapper::mapToPostDto);
     }
 }

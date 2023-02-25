@@ -3,8 +3,8 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <body>
-  <div th:fragment="admin-search-pagination">
-      <div>
+<div th:fragment="admin-search-pagination">
+    <div>
         <span>
             <strong style="margin-right: 15px;">Total Posts: [[${totalItems}]]</strong>
 
@@ -16,18 +16,20 @@
         </span>
 
         <span style="margin-right: 5px">
-            <a th:if="${currentPage < totalPages}" th:href="@{'/admin/posts/search?query=' + ${query} + '&page=' + ${currentPage + 1}}">Next</a>
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{'/admin/posts/search?query=' + ${query} + '&page=' + ${currentPage + 1}}">Next</a>
             <span th:unless="${currentPage < totalPages}">Next</span>
         </span>
 
         <span>
-            <a th:if="${currentPage < totalPages}" th:href="@{'/admin/posts/search?query=' + ${query} + '&page=' + ${totalPages}}">Last</a>
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{'/admin/posts/search?query=' + ${query} + '&page=' + ${totalPages}}">Last</a>
             <span th:unless="${currentPage < totalPages}">Last</span>
         </span>
 
         </span>
     </div>
-  </div>
+</div>
 
 </body>
 </html>

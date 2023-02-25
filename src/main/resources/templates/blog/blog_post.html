@@ -10,66 +10,70 @@
 
 <div class="container">
     <div class="row">
-    <div class="col-md-9">
-        <h2 th:text="${post.title}"></h2>
-        <hr/>
-        <h4 th:text="${post.shortDescription}"></h4>
-        <hr/>
-        <!-- th:utext used to display unescaped text (because of formatting) -->
-        <div th:utext="${post.content}"></div>
-        <hr/>
-        <div>
-            <h3>Comments:</h3>
-            <div th:each="comment : ${post.comments}">
-                <div>
-                    <p><strong class="text-secondary">Name: </strong> <strong th:text="${comment.name}"></strong></p>
-                    <p><strong class="text-secondary">Date: </strong> <strong th:text="${#temporals.format(comment.createdOn, 'dd MMMM yyyy')}"></strong></p>
-                    <p th:text="${comment.content}"></p>
-                    <hr/>
-                    <br/>
+        <div class="col-md-9">
+            <h2 th:text="${post.title}"></h2>
+            <hr/>
+            <h4 th:text="${post.shortDescription}"></h4>
+            <hr/>
+            <!-- th:utext used to display unescaped text (because of formatting) -->
+            <div th:utext="${post.content}"></div>
+            <hr/>
+            <div>
+                <h3>Comments:</h3>
+                <div th:each="comment : ${post.comments}">
+                    <div>
+                        <p><strong class="text-secondary">Name: </strong> <strong th:text="${comment.name}"></strong>
+                        </p>
+                        <p><strong class="text-secondary">Date: </strong> <strong
+                                th:text="${#temporals.format(comment.createdOn, 'dd MMMM yyyy')}"></strong></p>
+                        <p th:text="${comment.content}"></p>
+                        <hr/>
+                        <br/>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h2>Leave a comment</h2>
-                </div>
-                <div class="card-body">
-                    <form
-                            role="form"
-                            method="post"
-                            th:action="@{/{postUrl}/comments(postUrl=${post.url})}"
-                            th:object="${comment}"
-                    >
-                        <div class="row">
-                            <div class="col-md-5 mb-3">
-                                <input
-                                        class="form-control"
-                                        id="name"
-                                        name="name"
-                                        placeholder="Enter name"
-                                        th:field="*{name}"
-                                        type="text"
-                                />
-                                <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></p> <!-- display error messages if there are any -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Leave a comment</h2>
+                    </div>
+                    <div class="card-body">
+                        <form
+                                role="form"
+                                method="post"
+                                th:action="@{/{postUrl}/comments(postUrl=${post.url})}"
+                                th:object="${comment}"
+                        >
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <input
+                                            class="form-control"
+                                            id="name"
+                                            name="name"
+                                            placeholder="Enter name"
+                                            th:field="*{name}"
+                                            type="text"
+                                    />
+                                    <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></p>
+                                    <!-- display error messages if there are any -->
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-5 mb-3">
-                                <input
-                                        class="form-control"
-                                        id="email"
-                                        name="email"
-                                        placeholder="Enter email"
-                                        th:field="*{email}"
-                                        type="text"
-                                />
-                                <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p> <!-- display error messages if there are any -->
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <input
+                                            class="form-control"
+                                            id="email"
+                                            name="email"
+                                            placeholder="Enter email"
+                                            th:field="*{email}"
+                                            type="text"
+                                    />
+                                    <p th:if="${#fields.hasErrors('email')}" class="text-danger"
+                                       th:errors="*{email}"></p> <!-- display error messages if there are any -->
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-9 mb-3">
+                            <div class="row">
+                                <div class="col-md-9 mb-3">
                             <textarea
                                     class="form-control"
                                     id="content"
@@ -79,28 +83,29 @@
                                     th:field="*{content}"
                             >
                             </textarea>
-                            <p th:if="${#fields.hasErrors('content')}" class="text-danger" th:errors="*{content}"></p> <!-- display error messages if there are any -->
+                                    <p th:if="${#fields.hasErrors('content')}" class="text-danger"
+                                       th:errors="*{content}"></p> <!-- display error messages if there are any -->
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-5">
-                                <button
-                                        class="btn btn-primary"
-                                        type="submit"
-                                >
-                                    Submit
-                                </button>
+                            <div class="row">
+                                <div class="form-group col-md-5">
+                                    <button
+                                            class="btn btn-primary"
+                                            type="submit"
+                                    >
+                                        Submit
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <!-- search bar goes here -->
-        <div th:replace="~{blog/search :: search}"></div>
-    </div>
+        <div class="col-md-3">
+            <!-- search bar goes here -->
+            <div th:replace="~{blog/search :: search}"></div>
+        </div>
     </div>
 </div>
 <div th:replace="~{blog/footer :: footer}"></div>

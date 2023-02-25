@@ -49,7 +49,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity // used to enable spring security's web security support and provide the spring mvc integration
 public class WebSpringSecurity {
 
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public WebSpringSecurity(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -68,19 +68,19 @@ public class WebSpringSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/register/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/admin/**"))
-                                .hasAnyRole("ADMIN","GUEST")
+                                .hasAnyRole("ADMIN", "GUEST")
                                 .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/post/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/page/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/**/comments")).permitAll()
                                 .anyRequest().authenticated()
                 )
-                .formLogin( form -> form
+                .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/admin/posts")
                         .loginProcessingUrl("/login")
                         .permitAll()
-                ).logout( logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                ).logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .permitAll()
                 );
         return http.build();

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -46,11 +46,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user != null) {
             org.springframework.security.core.userdetails.User authenticatedUser =
                     new org.springframework.security.core.userdetails.User(
-                        user.getEmail(),
-                        user.getPassword(),
-                        user.getRoles().stream()
-                                .map((role) -> new SimpleGrantedAuthority(role.getName()))
-                                .collect(Collectors.toList())
+                            user.getEmail(),
+                            user.getPassword(),
+                            user.getRoles().stream()
+                                    .map((role) -> new SimpleGrantedAuthority(role.getName()))
+                                    .collect(Collectors.toList())
                     );
             return authenticatedUser;
         } else {

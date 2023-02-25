@@ -11,17 +11,20 @@
             <h4 th:if="${query != null && query != ''}">
                 <span th:text="${totalItems}"></span>
                 <span th:text="${totalItems == 1 ? 'result' : 'results'}"></span> for
-                "<strong th:text="${query}" />"
+                "<strong th:text="${query}"/>"
             </h4>
             <div th:each="adminPost : ${adminPosts}">
                 <div class="card">
                     <div class="card-header">
                         <h2>
                             <span class="bg-warning rounded py-1 px-1" style="font-size: 16px">Admin</span>
-                            <strong><a class="text-dark" style="text-decoration: none" th:href="@{/post/{postUrl}(postUrl=${adminPost.url})}" th:text="${adminPost.title}"></a></strong>
+                            <strong><a class="text-dark" style="text-decoration: none"
+                                       th:href="@{/post/{postUrl}(postUrl=${adminPost.url})}"
+                                       th:text="${adminPost.title}"></a></strong>
                         </h2>
                         <div>
-                            <span class="text-secondary" th:text="${#temporals.format(adminPost.createdOn, 'MMMM dd, yyyy')}"></span>
+                            <span class="text-secondary"
+                                  th:text="${#temporals.format(adminPost.createdOn, 'MMMM dd, yyyy')}"></span>
                         </div>
                     </div>
                     <div class="card-body">
@@ -35,10 +38,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>
-                            <a class="text-dark" style="text-decoration: none" th:href="@{/post/{postUrl}(postUrl=${post.url})}" th:text="${post.title}"></a>
+                            <a class="text-dark" style="text-decoration: none"
+                               th:href="@{/post/{postUrl}(postUrl=${post.url})}" th:text="${post.title}"></a>
                         </h3>
                         <div>
-                            <span class="text-secondary" th:text="${#temporals.format(post.createdOn, 'MMMM dd, yyyy')}"></span>
+                            <span class="text-secondary"
+                                  th:text="${#temporals.format(post.createdOn, 'MMMM dd, yyyy')}"></span>
                         </div>
                     </div>
                     <div class="card-body">
@@ -46,7 +51,7 @@
                         <a class="text-primary" th:href="@{/post/{postUrl}(postUrl=${post.url})}">Read more</a>
                     </div>
                 </div>
-                    <br/>
+                <br/>
             </div>
 
             <!-- pagination -->

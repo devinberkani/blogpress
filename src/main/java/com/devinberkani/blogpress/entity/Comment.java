@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 // allows for builder method to be used (User user = User.builder().name("John").age(30).email("john@example.com").build();)
 @Entity
-@Table(name="comments")
+@Table(name = "comments")
 public class Comment {
 
     @Id
@@ -32,7 +32,7 @@ public class Comment {
     private LocalDateTime updatedOn;
 
     @ManyToOne // many comments belong to one post
-    @JoinColumn(name="post_id", nullable = false) // column that is used to hold the foreign keys for the post entity
+    @JoinColumn(name = "post_id", nullable = false) // column that is used to hold the foreign keys for the post entity
     private Post post;
 
 }

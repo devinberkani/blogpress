@@ -30,9 +30,9 @@ public class User {
     // cascade all means whatever action we apply on user entity we will also apply on role entity, which makes sense because for example if you remove a user you want to remove their roles
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "users_roles" ,
-            joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, // creates join column for PRIMARY KEY from user (id)
-            inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") } // creates join column for PRIMARY KEY from role (id)
+            name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}, // creates join column for PRIMARY KEY from user (id)
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")} // creates join column for PRIMARY KEY from role (id)
     )
     private List<Role> roles = new ArrayList<>();
 
