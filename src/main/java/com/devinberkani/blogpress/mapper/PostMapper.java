@@ -19,6 +19,7 @@ public class PostMapper {
                 .createdOn(post.getCreatedOn())
                 .updatedOn(post.getUpdatedOn())
                 .comments(post.getComments().stream().map(CommentMapper::mapToCommentDto).collect(Collectors.toSet()))
+                .createdBy(post.getCreatedBy())
                 .build();
     }
 

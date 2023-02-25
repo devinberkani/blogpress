@@ -8,6 +8,7 @@ import com.devinberkani.blogpress.mapper.PostMapper;
 import com.devinberkani.blogpress.repository.PostRepository;
 import com.devinberkani.blogpress.service.PostService;
 import com.devinberkani.blogpress.util.SecurityUtils;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -122,5 +123,11 @@ public class PostServiceImpl implements PostService {
         return posts.stream()
                 .map(PostMapper::mapToPostDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<PostDto> findPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC,"id"));
+        return postRepository.findAll(pageable).map(PostMapper::mapToPostDto);
     }
 }

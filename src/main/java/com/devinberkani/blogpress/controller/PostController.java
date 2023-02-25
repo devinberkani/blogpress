@@ -37,8 +37,6 @@ public class PostController {
         } else {
             posts = postService.findPostsByUser(); // else only see own posts
         }
-        // make newest posts show up first by default
-        Collections.reverse(posts);
         model.addAttribute("posts", posts);
         return "admin/posts";
     }
@@ -53,8 +51,6 @@ public class PostController {
         } else {
             comments = commentService.findCommentsByPost(); // else only see comments on own posts
         }
-        // make newest comments show up first by default
-        Collections.reverse(comments);
         model.addAttribute("comments", comments);
         return "admin/comments";
     }
@@ -125,7 +121,6 @@ public class PostController {
     @GetMapping("/admin/posts/{postUrl}/view")
     public String viewPost(@PathVariable("postUrl") String postUrl, Model model) {
         PostDto postDto = postService.findPostByUrl(postUrl);
-        System.out.println(postDto);
         model.addAttribute("post", postDto);
         return "admin/view_post";
     }
@@ -141,8 +136,6 @@ public class PostController {
         } else {
             posts = postService.searchPostsByUser(query); // only search user posts
         }
-        // make newest comments show up first by default
-        Collections.reverse(posts);
         model.addAttribute("posts", posts);
         return "admin/posts";
     }

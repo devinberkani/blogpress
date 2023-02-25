@@ -1,5 +1,6 @@
 package com.devinberkani.blogpress.dto;
 
+import com.devinberkani.blogpress.entity.User;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,5 @@ public class PostDto {
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
     private Set<CommentDto> comments;
+    private User createdBy;
 }

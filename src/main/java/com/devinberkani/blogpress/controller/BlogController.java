@@ -2,8 +2,10 @@ package com.devinberkani.blogpress.controller;
 
 import com.devinberkani.blogpress.dto.CommentDto;
 import com.devinberkani.blogpress.dto.PostDto;
+import com.devinberkani.blogpress.entity.Post;
 import com.devinberkani.blogpress.service.PostService;
 import com.devinberkani.blogpress.util.SecurityUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class BlogController {
@@ -26,6 +29,11 @@ public class BlogController {
     // handler method to handle http://localhost:8080/
     @GetMapping("/")
     public String viewBlogPosts(Model model) {
+        return findPaginated(1, model);
+    }
+
+    @GetMapping("/page/{pageNo}")
+    public String findPaginated(@PathVariable (value = "pageNo") int pageNo, Model model) {
         String role;
         // role may be null if current site visitor is client, check for this situation
         try {
@@ -37,10 +45,15 @@ public class BlogController {
         model.addAttribute("role", role);
         List<PostDto> adminPosts = postService.getAdminPosts();
         model.addAttribute("adminPosts", adminPosts);
-        List<PostDto> postsResponse = postService.getNonAdminPosts();
-        // make newest posts show up first by default
-        Collections.reverse(postsResponse);
-        model.addAttribute("postsResponse", postsResponse);
+        // pagination start
+        int pageSize = 5;
+        Page<PostDto> page = postService.findPaginated(pageNo, pageSize);
+        // filter out admin posts from pagination
+        List<PostDto> listPosts = page.getContent().stream().filter(post -> post.getCreatedBy().getId() != 1).collect(Collectors.toList());
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("postsResponse", listPosts);
         return "blog/view_posts";
     }
 
@@ -78,13 +91,12 @@ public class BlogController {
         model.addAttribute("role", role);
         List<PostDto> postsResponse;
         if (query.equals("")) {
-            List<PostDto> adminPosts = postService.getAdminPosts();
-            model.addAttribute("adminPosts", adminPosts);
-            postsResponse = postService.getNonAdminPosts();
+            // if there is no query, return the paginated home page
+            return findPaginated(1, model);
         } else {
             postsResponse = postService.searchPosts(query);
         }
-        // make newest posts show up first by default
+        // make newest posts show up first in search by default
         Collections.reverse(postsResponse);
         model.addAttribute("postsResponse", postsResponse);
         return "blog/view_posts";
