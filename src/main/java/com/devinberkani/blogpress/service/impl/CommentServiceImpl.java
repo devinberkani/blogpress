@@ -10,9 +10,11 @@ import com.devinberkani.blogpress.entity.User;
 import com.devinberkani.blogpress.repository.CommentRepository;
 import com.devinberkani.blogpress.repository.PostRepository;
 import com.devinberkani.blogpress.service.CommentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,8 +43,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> findAllComments() {
-        return commentRepository.findAll().stream().map(CommentMapper::mapToCommentDto).collect(Collectors.toList());
+    public Page<CommentDto> findAllComments(int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 5);
+        return commentRepository.findAll(pageable).map(CommentMapper::mapToCommentDto);
     }
 
     @Override
@@ -51,11 +54,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> findCommentsByPost() {
+    public Page<CommentDto> findCommentsByPost(int pageNo) {
         String email = SecurityUtils.getCurrentUser().getUsername();
         User createdBy = userRepository.findByEmail(email);
         Long userId = createdBy.getId();
-        List<Comment> comments = commentRepository.findCommentsByPost(userId);
-        return comments.stream().map(CommentMapper::mapToCommentDto).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNo - 1, 5);
+        Page<Comment> comments = commentRepository.findCommentsByPost(userId, pageable);
+        return commentRepository.findCommentsByPost(userId, pageable).map(CommentMapper::mapToCommentDto);
     }
 }

@@ -7,12 +7,12 @@ import com.devinberkani.blogpress.dto.PostDto;
 import com.devinberkani.blogpress.service.CommentService;
 import com.devinberkani.blogpress.service.PostService;
 import com.devinberkani.blogpress.util.SecurityUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -30,27 +30,40 @@ public class PostController {
 
     @GetMapping("/admin/posts")
     public String posts(Model model) {
+        return viewPaginatedPosts(1, model);
+    }
+
+    @GetMapping("/admin/posts/page/{pageNo}")
+    public String viewPaginatedPosts(@PathVariable (value = "pageNo") int pageNo, Model model) {
         String role = SecurityUtils.getRole();
-        List<PostDto> posts;
+        Page<PostDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
-            posts = postService.findAllPosts(); // get access to all posts
+            page = postService.searchAdminPosts("", pageNo); // get access to all posts
         } else {
-            posts = postService.findPostsByUser(); // else only see own posts
+            page = postService.searchUserPosts("", pageNo); // else only see own posts
         }
-        model.addAttribute("posts", posts);
-        return "admin/posts";
+        return getPage(pageNo, model, page);
     }
 
     // handler method to handle list comments request
     @GetMapping("/admin/posts/comments")
     public String postComments(Model model) {
+        return viewPaginatedComments(1, model);
+    }
+
+    @GetMapping("/admin/posts/comments/page/{pageNo}")
+    public String viewPaginatedComments(@PathVariable(value = "pageNo") int pageNo, Model model) {
         String role = SecurityUtils.getRole();
-        List<CommentDto> comments;
+        Page<CommentDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
-            comments = commentService.findAllComments(); // get access to all comments
+            page = commentService.findAllComments(pageNo); // get access to all comments
         } else {
-            comments = commentService.findCommentsByPost(); // else only see comments on own posts
+            page = commentService.findCommentsByPost(pageNo); // else only see comments on own posts
         }
+        List<CommentDto> comments = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("comments", comments);
         return "admin/comments";
     }
@@ -128,14 +141,28 @@ public class PostController {
     // handler method to handle search blog posts request
     // localhost:8080/admin/posts/search?query=java
     @GetMapping("/admin/posts/search")
-    public String searchPosts(@RequestParam(value="query") String query, Model model) { // @Request Param binds the value of the query request parameter to the query method parameter
+    public String searchPosts(@RequestParam(value="query") String query, @RequestParam(value = "page") int pageNo, Model model) { // @Request Param binds the value of the query request parameter to the query method parameter
+        return searchPaginatedPosts(query, pageNo, model);
+    }
+
+    @GetMapping("/admin/posts/search?query={query}&page={page}")
+    public String searchPaginatedPosts(@PathVariable(value = "query") String query, @PathVariable (value = "page") int pageNo, Model model) {
         String role = SecurityUtils.getRole();
-        List<PostDto> posts;
+        Page<PostDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
-            posts = postService.searchPosts(query); // search all of the posts in the database
+            page = postService.searchAdminPosts(query, pageNo); // search all of the posts in the database
         } else {
-            posts = postService.searchPostsByUser(query); // only search user posts
+            page = postService.searchUserPosts(query, pageNo); // FIXME: only search user posts
         }
+        model.addAttribute("query", query);
+        return getPage(pageNo, model, page);
+    }
+
+    private String getPage(@PathVariable("page") int pageNo, Model model, Page<PostDto> page) {
+        List<PostDto> posts = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("posts", posts);
         return "admin/posts";
     }

@@ -11,15 +11,15 @@
         <div class="form-group">
           <form class="form-inline" th:action="@{/page/search}">
             <div class="input-group">
-              <input class="form-control" name="query" />
+                <input class="form-control" name="query" />
+                <input type="hidden" name="page" value="1" />
               <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit">Search</button>
+                <button class="btn-primary btn" type="submit">Search</button>
               </span>
             </div>
           </form>
         </div>
       </div>
-
   </div>
 
 </body>

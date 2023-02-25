@@ -1,6 +1,7 @@
 package com.devinberkani.blogpress.service;
 
 import com.devinberkani.blogpress.dto.CommentDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -8,9 +9,9 @@ public interface CommentService {
 
     void createComment(String postUrl, CommentDto commentDto);
 
-    List<CommentDto> findAllComments();
+    Page<CommentDto> findAllComments(int pageNo);
 
     void deleteComment(Long commentId);
 
-    List<CommentDto> findCommentsByPost();
+    Page<CommentDto> findCommentsByPost(int pageNo);
 }

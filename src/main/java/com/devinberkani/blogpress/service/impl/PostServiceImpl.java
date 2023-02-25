@@ -107,26 +107,40 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> searchPosts(String query) {
-        List<Post> posts = postRepository.searchPosts(query);
-        return posts.stream()
-                .map(PostMapper::mapToPostDto)
-                .collect(Collectors.toList());
+    public Page<PostDto> searchAllPosts(String query, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Direction.DESC,"id"));
+        return postRepository.searchPosts(query, pageable).map(PostMapper::mapToPostDto);
     }
 
     @Override
-    public List<PostDto> searchPostsByUser(String query) {
+    public Page<PostDto> searchAdminPosts(String query, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 5);
+        return postRepository.searchPosts(query, pageable).map(PostMapper::mapToPostDto);
+    }
+
+    @Override
+    public Page<PostDto> searchUserPosts(String query, int pageNo) {
         String email = SecurityUtils.getCurrentUser().getUsername(); // gets current logged in user
         User createdBy = userRepository.findByEmail(email); // gets user
         Long userId = createdBy.getId(); // gets user id
-        List<Post> posts = postRepository.searchPostsByUserId(query, userId); // gets list of user posts
-        return posts.stream()
-                .map(PostMapper::mapToPostDto)
-                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNo - 1, 5);
+        return postRepository.searchPostsByUserId(query, userId, pageable).map(PostMapper::mapToPostDto);
     }
 
     @Override
-    public Page<PostDto> findPaginated(int pageNo, int pageSize) {
+    public String getRole() {
+        String role;
+        // role may be null if current site visitor is client, check for this situation
+        try {
+            role = SecurityUtils.getRole();
+        } catch (NullPointerException nullPointerException) {
+            role = "ROLE_CLIENT"; // if role is null, make them a client
+        }
+        return role; // if not null, role will either be guest or admin
+    }
+
+    @Override
+    public Page<PostDto> findAllPaginatedPosts(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC,"id"));
         return postRepository.findAll(pageable).map(PostMapper::mapToPostDto);
     }

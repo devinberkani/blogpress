@@ -1,7 +1,6 @@
 package com.devinberkani.blogpress.service;
 
 import com.devinberkani.blogpress.dto.PostDto;
-import com.devinberkani.blogpress.entity.Post;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -24,9 +23,11 @@ public interface PostService {
 
     PostDto findPostByUrl(String postUrl);
 
-    List<PostDto> searchPosts(String query);
+//    List<PostDto> searchPosts(String query);
+    Page<PostDto> searchAllPosts(String query, int pageNo);
+    Page<PostDto> searchAdminPosts(String query, int pageNo);
 
-    List<PostDto> searchPostsByUser(String query);
-
-    Page<PostDto> findPaginated(int pageNo, int pageSize);
+    Page<PostDto> searchUserPosts(String query, int pageNo);
+    String getRole();
+    Page<PostDto> findAllPaginatedPosts(int pageNo, int pageSize);
 }
