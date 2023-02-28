@@ -30,19 +30,25 @@ public class PostController {
 
     @GetMapping("/admin/posts")
     public String posts(Model model) {
-        return viewPaginatedPosts(1, model);
+        return viewPaginatedPosts(1, "createdOn", "desc", model);
     }
 
     @GetMapping("/admin/posts/page/{pageNo}")
-    public String viewPaginatedPosts(@PathVariable(value = "pageNo") int pageNo, Model model) {
+    public String viewPaginatedPosts(@PathVariable(value = "pageNo") int pageNo,
+                                     @RequestParam("sortField") String sortField,
+                                     @RequestParam("sortDir") String sortDir,
+                                     Model model) {
         String role = SecurityUtils.getRole();
         Page<PostDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
-            page = postService.searchAdminPosts("", pageNo); // get access to all posts
+            page = postService.searchAdminPosts("", pageNo, sortField, sortDir); // get access to all posts
         } else {
-            page = postService.searchUserPosts("", pageNo); // else only see own posts
+            page = postService.searchUserPosts("", pageNo, sortField, sortDir); // else only see own posts
         }
         model.addAttribute("query", "");
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
         return getPage(pageNo, model, page);
     }
 
@@ -114,7 +120,7 @@ public class PostController {
     // handler method to handle edit post form submit request
     @PostMapping("/admin/posts/{postId}")
     public String updatePost(@PathVariable("postId") Long postId, @Valid @ModelAttribute("post") PostDto postDto, BindingResult result, Model model) {
-        postDto.setId(postId); // id has to be set in the beginning or it won't be able to match the post mapping url
+        postDto.setId(postId); // id has to be set in the beginning, or it won't be able to match the post mapping url
         if (result.hasErrors()) {
             // if there's an error, stay on the same page and use the same object for post editing
             model.addAttribute("post", postDto);
@@ -142,20 +148,28 @@ public class PostController {
     // handler method to handle search blog posts request
     // localhost:8080/admin/posts/search?query=java
     @GetMapping("/admin/posts/search")
-    public String searchPosts(@RequestParam(value = "query") String query, @RequestParam(value = "page") int pageNo, Model model) { // @Request Param binds the value of the query request parameter to the query method parameter
-        return searchPaginatedPosts(query, pageNo, model);
+    public String searchPosts(@RequestParam(value = "query") String query, @RequestParam(value = "page") int pageNo, @RequestParam("sortField") String sortField,
+                              @RequestParam("sortDir") String sortDir, Model model) { // @Request Param binds the value of the query request parameter to the query method parameter
+        return searchPaginatedPosts(query, pageNo, sortField, sortDir, model);
     }
 
-    @GetMapping("/admin/posts/search?query={query}&page={page}")
-    public String searchPaginatedPosts(@PathVariable(value = "query") String query, @PathVariable(value = "page") int pageNo, Model model) {
+    @GetMapping("/admin/posts/search?query={query}&page={page}&sortField={sortField}&sortDir={sortDir}")
+    public String searchPaginatedPosts(@PathVariable(value = "query") String query,
+                                       @PathVariable(value = "page") int pageNo,
+                                       @PathVariable(value = "sortField") String sortField,
+                                       @PathVariable(value = "sortDir") String sortDir,
+                                       Model model) {
         String role = SecurityUtils.getRole();
         Page<PostDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
-            page = postService.searchAdminPosts(query, pageNo); // search all of the posts in the database
+            page = postService.searchAdminPosts(query, pageNo, sortField, sortDir); // search all the posts in the database
         } else {
-            page = postService.searchUserPosts(query, pageNo);
+            page = postService.searchUserPosts(query, pageNo, sortField, sortDir);
         }
         model.addAttribute("query", query);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
         return getPage(pageNo, model, page);
     }
 

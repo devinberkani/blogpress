@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<body>
+<div th:fragment="main-sorting">
+    <th style="width:20%">
+        <a th:href="@{'/admin/posts/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">Post Title</a>
+    </th>
+    <th style="width:30%">
+        <a th:href="@{'/admin/posts/page/' + ${currentPage} + '?sortField=shortDescription&sortDir=' + ${reverseSortDir}}">Post Short Description</a>
+    </th>
+    <th style="width:20%">
+        <a th:href="@{'/admin/posts/page/' + ${currentPage} + '?sortField=createdOn&sortDir=' + ${reverseSortDir}}">Post Created On</a>
+    </th>
+    <th style="width:20%">Actions</th>
+</div>
+
+</body>
+</html>

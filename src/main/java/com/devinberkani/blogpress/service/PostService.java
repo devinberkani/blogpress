@@ -27,9 +27,9 @@ public interface PostService {
     //    List<PostDto> searchPosts(String query);
     Page<PostDto> searchAllPosts(String query, int pageNo);
 
-    Page<PostDto> searchAdminPosts(String query, int pageNo);
+    Page<PostDto> searchAdminPosts(String query, int pageNo, String sortField, String sortDirection);
 
-    Page<PostDto> searchUserPosts(String query, int pageNo);
+    Page<PostDto> searchUserPosts(String query, int pageNo, String sortField, String sortDirection);
 
     String getRole();
 

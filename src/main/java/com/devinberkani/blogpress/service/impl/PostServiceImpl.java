@@ -108,22 +108,24 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostDto> searchAllPosts(String query, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Direction.DESC, "createdOn"));
         return postRepository.searchPosts(query, pageable).map(PostMapper::mapToPostDto);
     }
 
     @Override
-    public Page<PostDto> searchAdminPosts(String query, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5);
+    public Page<PostDto> searchAdminPosts(String query, int pageNo, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
         return postRepository.searchPosts(query, pageable).map(PostMapper::mapToPostDto);
     }
 
     @Override
-    public Page<PostDto> searchUserPosts(String query, int pageNo) {
+    public Page<PostDto> searchUserPosts(String query, int pageNo, String sortField, String sortDirection) {
         String email = SecurityUtils.getCurrentUser().getUsername(); // gets current logged in user
         User createdBy = userRepository.findByEmail(email); // gets user
         Long userId = createdBy.getId(); // gets user id
-        Pageable pageable = PageRequest.of(pageNo - 1, 5);
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
         return postRepository.searchPostsByUserId(query, userId, pageable).map(PostMapper::mapToPostDto);
     }
 
@@ -141,7 +143,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostDto> findAllPaginatedPosts(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdOn"));
         return postRepository.findAll(pageable).map(PostMapper::mapToPostDto);
     }
 }
