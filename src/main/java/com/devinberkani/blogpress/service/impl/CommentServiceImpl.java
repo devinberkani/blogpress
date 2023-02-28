@@ -13,6 +13,7 @@ import com.devinberkani.blogpress.service.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -43,8 +44,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Page<CommentDto> findAllComments(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5);
+    public Page<CommentDto> findAllComments(int pageNo, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
         return commentRepository.findAll(pageable).map(CommentMapper::mapToCommentDto);
     }
 
@@ -54,12 +56,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Page<CommentDto> findCommentsByPost(int pageNo) {
+    public Page<CommentDto> findCommentsByPost(int pageNo, String sortField, String sortDirection) {
         String email = SecurityUtils.getCurrentUser().getUsername();
         User createdBy = userRepository.findByEmail(email);
         Long userId = createdBy.getId();
-        Pageable pageable = PageRequest.of(pageNo - 1, 5);
-        Page<Comment> comments = commentRepository.findCommentsByPost(userId, pageable);
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
         return commentRepository.findCommentsByPost(userId, pageable).map(CommentMapper::mapToCommentDto);
     }
 }

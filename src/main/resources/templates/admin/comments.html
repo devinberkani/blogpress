@@ -15,9 +15,15 @@
             <thead class="table-dark">
             <tr>
                 <!--        <th>#</th>-->
-                <th>Email</th>
-                <th>Comment</th>
-                <th>Created Date</th>
+                <th>
+                    <a th:href="@{'/admin/posts/comments/page/' + ${currentPage} + '?sortField=email&sortDir=' + ${reverseSortDir}}">Email</a>
+                </th>
+                <th>
+                    <a th:href="@{'/admin/posts/comments/page/' + ${currentPage} + '?sortField=content&sortDir=' + ${reverseSortDir}}">Comment</a>
+                </th>
+                <th>
+                    <a th:href="@{'/admin/posts/comments/page/' + ${currentPage} + '?sortField=createdOn&sortDir=' + ${reverseSortDir}}">Created Date</a>
+                </th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -46,19 +52,19 @@
 
         <span style="margin-right: 15px;">
             <span style="margin-right: 5px" th:each="i : ${#numbers.sequence(1, totalPages)}">
-                <a th:if="${currentPage != i}" th:href="@{'/admin/posts/comments/page/' + ${i}}">[[${i}]]</a>
+                <a th:if="${currentPage != i}" th:href="@{'/admin/posts/comments/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
                 <span th:unless="${currentPage != i}">[[${i}]]</span>
             </span>
         </span>
 
         <span style="margin-right: 5px">
             <a th:if="${currentPage < totalPages}"
-               th:href="@{'/admin/posts/comments/page/' + ${currentPage + 1}}">Next</a>
+               th:href="@{'/admin/posts/comments/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
             <span th:unless="${currentPage < totalPages}">Next</span>
         </span>
 
         <span>
-            <a th:if="${currentPage < totalPages}" th:href="@{'/admin/posts/comments/page/' + ${totalPages}}">Last</a>
+            <a th:if="${currentPage < totalPages}" th:href="@{'/admin/posts/comments/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
             <span th:unless="${currentPage < totalPages}">Last</span>
         </span>
 

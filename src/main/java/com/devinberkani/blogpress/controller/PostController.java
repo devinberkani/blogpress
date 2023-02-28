@@ -55,19 +55,25 @@ public class PostController {
     // handler method to handle list comments request
     @GetMapping("/admin/posts/comments")
     public String postComments(Model model) {
-        return viewPaginatedComments(1, model);
+        return viewPaginatedComments(1, "createdOn", "desc", model);
     }
 
     @GetMapping("/admin/posts/comments/page/{pageNo}")
-    public String viewPaginatedComments(@PathVariable(value = "pageNo") int pageNo, Model model) {
+    public String viewPaginatedComments(@PathVariable(value = "pageNo") int pageNo,
+                                        @RequestParam("sortField") String sortField,
+                                        @RequestParam("sortDir") String sortDir,
+                                        Model model) {
         String role = SecurityUtils.getRole();
         Page<CommentDto> page;
         if (ROLE.ROLE_ADMIN.name().equals(role)) { // if role in database is equal to ROLE_ADMIN
-            page = commentService.findAllComments(pageNo); // get access to all comments
+            page = commentService.findAllComments(pageNo, sortField, sortDir); // get access to all comments
         } else {
-            page = commentService.findCommentsByPost(pageNo); // else only see comments on own posts
+            page = commentService.findCommentsByPost(pageNo, sortField, sortDir); // else only see comments on own posts
         }
         List<CommentDto> comments = page.getContent();
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());

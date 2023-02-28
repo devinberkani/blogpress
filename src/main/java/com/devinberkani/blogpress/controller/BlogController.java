@@ -59,25 +59,6 @@ public class BlogController {
         return "blog/blog_post";
     }
 
-    // handler method to handle blog search request
-    // localhost:8080/admin/page/search?query=java
-//    @GetMapping("/page/search")
-//    public String searchPosts(@RequestParam(value = "query") String query, Model model) {
-//        String role = postService.getRole();
-//        model.addAttribute("role", role);
-//        List<PostDto> postsResponse;
-//        if (query.equals("")) {
-//            // if there is no query, return the paginated home page
-//            return findPaginated(1, model);
-//        } else {
-//            postsResponse = postService.searchPosts(query);
-//        }
-//        // make newest posts show up first in search by default
-//        Collections.reverse(postsResponse);
-//        model.addAttribute("postsResponse", postsResponse);
-//        return "blog/view_posts";
-//    }
-
     @GetMapping("/page/search")
     public String searchPosts(@RequestParam(value = "query") String query, @RequestParam(value = "page") int pageNo, Model model) {
         return findPaginatedSearch(query, pageNo, model);
